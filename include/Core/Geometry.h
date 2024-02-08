@@ -11,8 +11,8 @@ public:
     ~Geometry();
 
     virtual void setupVertices() = 0;
+    virtual void setupNormals() = 0;
     virtual void setupIndices() = 0;
-    // virtual void setupNormals() = 0;
 
     glm::vec3 getPosition() {
         return position;
@@ -29,9 +29,9 @@ public:
     std::vector<GLint> getIndices() {
         return indices;
     }
-    // std::vector<GLfloat> getNormals() {
-    //     return normals;
-    // }
+    std::vector<GLfloat> getNormals() {
+        return normals;
+    }
 
     void setPosition(glm::vec3 newPosition) {
         position = newPosition;
@@ -51,7 +51,7 @@ private:
 protected:
     std::vector<GLfloat> vertices;
     std::vector<GLint> indices;
-    // std::vector<GLfloat> normals;
+    std::vector<GLfloat> normals;
 };
 
 #endif // CORE_GEOMETRY_H

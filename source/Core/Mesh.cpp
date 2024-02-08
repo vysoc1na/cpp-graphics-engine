@@ -8,9 +8,11 @@ Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderP
 {
     vao = 0;
     vbo = 0;
+    nbo = 0;
     ibo = 0;
 
     geometry->setupVertices();
+    geometry->setupNormals();
     geometry->setupIndices();
 
     setupModelMatrix();
@@ -20,12 +22,13 @@ Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderP
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &nbo);
     glDeleteBuffers(1, &ibo);
 }
 
 void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
     glUseProgram(shaderProgram);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     setupModelMatrix();
     // setupVertexData();
@@ -59,22 +62,34 @@ void Mesh::setupModelMatrix() {
 
 void Mesh::setupVertexData() {
     std::vector<GLfloat> vertices = geometry->getVertices();
+    std::vector<GLfloat> normals = geometry->getNormals();
     std::vector<GLint> indices = geometry->getIndices();
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
+    // position buffer
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertices.size() * sizeof(float)), vertices.data(), GL_STATIC_DRAW);
 
+    // normals buffer
+    glGenBuffers(1, &nbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, nbo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(normals.size() * sizeof(float)), normals.data(), GL_STATIC_DRAW);
+
+    // indicies
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(indices.size() * sizeof(float)), indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(indices.size() * sizeof(int)), indices.data(), GL_STATIC_DRAW);
 
-    // Position attribute
+    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)nullptr);
     glEnableVertexAttribArray(0);
+
+    // normals attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)nullptr);
+    glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);

@@ -9,6 +9,7 @@ public:
     ~CubeGeometry() = default;
 
     void setupVertices() override;
+    void setupNormals() override;
     void setupIndices() override;
 };
 

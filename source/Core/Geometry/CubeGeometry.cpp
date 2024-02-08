@@ -18,6 +18,23 @@ void CubeGeometry::setupVertices() {
     };
 }
 
+void CubeGeometry::setupNormals() {
+    normals = {
+        // front
+        0.0f, 0.0f, 1.0f,
+        // right
+        1.0f, 0.0f, 0.0f,
+        // back
+        0.0f, 0.0f, -1.0f,
+        // left
+        -1.0f, 0.0f, 0.0f,
+        // bottom
+        0.0f, -1.0f, 0.0f,
+        // top
+        0.0f, 1.0f, 0.0f
+    };
+}
+
 void CubeGeometry::setupIndices() {
     indices = {
         // front

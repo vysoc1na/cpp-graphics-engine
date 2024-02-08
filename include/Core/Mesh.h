@@ -20,7 +20,10 @@ public:
     GLuint shaderProgram;
 
 private:
-    GLuint vao {}, vbo {}, ibo {};
+    GLuint vao {};
+    GLuint vbo {}; // vertices
+    GLuint nbo {}; // normals
+    GLuint ibo {}; // indices
 
     glm::mat4 model {};
 
