@@ -3,7 +3,7 @@
 
 #include <Core/Mesh.h>
 
-Mesh::Mesh(Geometry &inputGeometry, Material &inputMaterial) : geometry(inputGeometry), material(inputMaterial) {
+Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial) : geometry(inputGeometry), material(inputMaterial) {
     vao = 0;
     vbo = 0;
     ebo = 0;
@@ -57,14 +57,14 @@ void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
     glUseProgram(shaderProgram);
 
     setupModelMatrix();
-    setupVertexData();
+    // setupVertexData();
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(vao);
-    std::vector<GLint> indices = geometry.getIndices();
+    std::vector<GLint> indices = geometry->getIndices();
     glDrawElements(GL_TRIANGLES, indices.size() * sizeof(int), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
 
@@ -72,20 +72,20 @@ void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
 }
 
 void Mesh::setupModelMatrix() {
-    glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0), geometry.getPosition());
+    glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0), geometry->getPosition());
 
-    glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), glm::radians(geometry.getRotation().x), glm::vec3(1.0, 0.0, 0.0));
-    rotation_matrix = glm::rotate(rotation_matrix, glm::radians(geometry.getRotation().y), glm::vec3(0.0, 1.0, 0.0));
-    rotation_matrix = glm::rotate(rotation_matrix, glm::radians(geometry.getRotation().z), glm::vec3(0.0, 0.0, 1.0));
+    glm::mat4 rotation_matrix = glm::rotate(glm::mat4(1.0), glm::radians(geometry->getRotation().x), glm::vec3(1.0, 0.0, 0.0));
+    rotation_matrix = glm::rotate(rotation_matrix, glm::radians(geometry->getRotation().y), glm::vec3(0.0, 1.0, 0.0));
+    rotation_matrix = glm::rotate(rotation_matrix, glm::radians(geometry->getRotation().z), glm::vec3(0.0, 0.0, 1.0));
 
-    glm::mat4 scale_matrix = glm::scale(glm::mat4(1.0), geometry.getScale());
+    glm::mat4 scale_matrix = glm::scale(glm::mat4(1.0), geometry->getScale());
 
     model = translation_matrix * rotation_matrix * scale_matrix;
 }
 
 void Mesh::setupVertexData() {
-    std::vector<GLfloat> vertices = geometry.getVertices();
-    std::vector<GLint> indices = geometry.getIndices();
+    std::vector<GLfloat> vertices = geometry->getVertices();
+    std::vector<GLint> indices = geometry->getIndices();
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);

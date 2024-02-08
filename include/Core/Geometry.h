@@ -10,6 +10,10 @@ public:
     Geometry(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale);
     ~Geometry();
 
+    virtual void setupVertices() = 0;
+    virtual void setupIndices() = 0;
+    // virtual void setupNormals() = 0;
+
     glm::vec3 getPosition() {
         return position;
     }
@@ -44,13 +48,10 @@ private:
     glm::vec3 rotation {};
     glm::vec3 scale {};
 
+protected:
     std::vector<GLfloat> vertices;
     std::vector<GLint> indices;
     // std::vector<GLfloat> normals;
-
-    void setupVertices();
-    void setupIndices();
-    // void setupNormals();
 };
 
 #endif // CORE_GEOMETRY_H

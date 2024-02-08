@@ -10,13 +10,13 @@
 
 class Mesh {
 public:
-    Mesh(Geometry &geometry, Material &material);
+    Mesh(Geometry *geometry, Material *material);
     ~Mesh();
 
     void render(glm::mat4 view, glm::mat4 projection, float deltaTime);
 
-    Geometry geometry;
-    Material material;
+    Geometry* geometry;
+    Material* material;
 
 private:
     GLuint vao {}, vbo {}, ebo {};
