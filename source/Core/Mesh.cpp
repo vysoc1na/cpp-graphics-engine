@@ -3,7 +3,9 @@
 
 #include <Core/Mesh.h>
 
-Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial) : geometry(inputGeometry), material(inputMaterial) {
+Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderProgram)
+    : geometry(inputGeometry), material(inputMaterial), shaderProgram(inputShaderProgram)
+{
     vao = 0;
     vbo = 0;
     ebo = 0;
@@ -13,53 +15,17 @@ Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial) : geometry(inputGeo
 
     setupModelMatrix();
     setupVertexData();
-
-    const char* vertexShaderSource = R"(
-        #version 330 core
-        layout (location = 0) in vec3 aPos;
-        uniform mat4 model;
-        uniform mat4 view;
-        uniform mat4 projection;
-        void main() {
-            gl_Position = projection * view * model * vec4(aPos, 1.0);
-        }
-    )";
-
-    const char* fragmentShaderSource = R"(
-        #version 330 core
-        out vec4 FragColor;
-        uniform vec3 color;
-        uniform float alpha;
-        void main() {
-            // vec2 uv = gl_FragCoord.xy / vec2(1600, 1200);
-            FragColor = vec4(color, alpha);
-        }
-    )";
-
-    GLuint vertexShader = loadShaderFromSource(vertexShaderSource, GL_VERTEX_SHADER);
-    GLuint fragmentShader = loadShaderFromSource(fragmentShaderSource, GL_FRAGMENT_SHADER);
-
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ebo);
-
-    glDeleteProgram(shaderProgram);
 }
 
 void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
     glUseProgram(shaderProgram);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     setupModelMatrix();
     // setupVertexData();
@@ -112,28 +78,4 @@ void Mesh::setupVertexData() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-}
-
-void Mesh::checkShaderCompileErrors(GLuint shader, const std::string &type) {
-    GLint success;
-    GLchar infoLog[512];
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cerr << "Error: " << type << " compilation failed\n" << infoLog << std::endl;
-        std::exit(-1);
-    }
-}
-
-GLuint Mesh::loadShaderFromSource(const char* shaderSource, GLenum shaderType) {
-    // Create and compile shader
-    GLuint shader = glCreateShader(shaderType);
-    glShaderSource(shader, 1, &shaderSource, nullptr);
-    glCompileShader(shader);
-
-    // Check for shader compilation errors
-    checkShaderCompileErrors(shader, "Shader");
-
-    return shader;
 }

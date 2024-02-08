@@ -10,25 +10,22 @@
 
 class Mesh {
 public:
-    Mesh(Geometry *geometry, Material *material);
+    Mesh(Geometry *geometry, Material *material, GLuint shaderProgram);
     ~Mesh();
 
     void render(glm::mat4 view, glm::mat4 projection, float deltaTime);
 
     Geometry* geometry;
     Material* material;
+    GLuint shaderProgram;
 
 private:
     GLuint vao {}, vbo {}, ebo {};
-    GLuint shaderProgram {};
 
     glm::mat4 model {};
 
     void setupModelMatrix();
     void setupVertexData();
-
-    static GLuint loadShaderFromSource(const char* shaderSource, GLenum shaderType);
-    static void checkShaderCompileErrors(GLuint shader, const std::string &type);
 };
 
 #endif // CORE_MESH_H
