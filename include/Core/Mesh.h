@@ -20,7 +20,7 @@ public:
     GLuint shaderProgram;
 
 private:
-    GLuint vao {}, vbo {}, ebo {};
+    GLuint vao {}, vbo {}, ibo {};
 
     glm::mat4 model {};
 

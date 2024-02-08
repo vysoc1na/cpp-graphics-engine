@@ -8,7 +8,7 @@ Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderP
 {
     vao = 0;
     vbo = 0;
-    ebo = 0;
+    ibo = 0;
 
     geometry->setupVertices();
     geometry->setupIndices();
@@ -20,7 +20,7 @@ Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderP
 Mesh::~Mesh() {
     glDeleteVertexArrays(1, &vao);
     glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &ebo);
+    glDeleteBuffers(1, &ibo);
 }
 
 void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
@@ -68,8 +68,8 @@ void Mesh::setupVertexData() {
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertices.size() * sizeof(float)), vertices.data(), GL_STATIC_DRAW);
 
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(indices.size() * sizeof(float)), indices.data(), GL_STATIC_DRAW);
 
     // Position attribute

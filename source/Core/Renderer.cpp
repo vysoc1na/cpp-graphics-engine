@@ -33,6 +33,7 @@ Renderer::Renderer(glm::ivec2 inputResolution) {
     }
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(framebufferSizeCallback));
 }
 

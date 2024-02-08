@@ -5,24 +5,32 @@ CubeGeometry::CubeGeometry(glm::vec3 inputPosition, glm::vec3 inputRotation, glm
 
 void CubeGeometry::setupVertices() {
     vertices = {
-        -0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f, -0.5f,
-        0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
+        // front
         -0.5f, -0.5f,  0.5f,
-        0.5f, -0.5f,  0.5f,
-        0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f
+         0.5f, -0.5f,  0.5f,
+         0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f,
+        // back
+        -0.5f, -0.5f, -0.5f,
+         0.5f, -0.5f, -0.5f,
+         0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f
     };
 }
 
 void CubeGeometry::setupIndices() {
     indices = {
-        0, 1, 2, 2, 3, 0,   // Front face
-        4, 5, 6, 6, 7, 4,   // Back face
-        0, 4, 3, 3, 7, 4,   // Left face
-        1, 5, 2, 2, 6, 5,   // Right face
-        0, 1, 4, 4, 5, 1,   // Bottom face
-        2, 3, 6, 6, 7, 3    // Top face
+        // front
+        0, 1, 2, 2, 3, 0,
+        // right
+        1, 5, 6, 6, 2, 1,
+        // back
+        7, 6, 5, 5, 4, 7,
+        // left
+        4, 0, 3, 3, 7, 4,
+        // bottom
+        4, 5, 1, 1, 0, 4,
+        // top
+        3, 2, 6, 6, 7, 3
     };
 }
