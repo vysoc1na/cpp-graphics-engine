@@ -8,10 +8,18 @@ Shader::Shader() {
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+
+    fragmentShaderShadows = loadShaderFromSource(fragmentShaderShadowsSource, GL_FRAGMENT_SHADER);
+
+    shaderProgramShadows = glCreateProgram();
+    glAttachShader(shaderProgramShadows, vertexShader);
+    glAttachShader(shaderProgramShadows, fragmentShaderShadows);
+    glLinkProgram(shaderProgramShadows);
 }
 
 Shader::~Shader() {
     glDeleteProgram(shaderProgram);
+    glDeleteProgram(shaderProgramShadows);
 }
 
 void Shader::checkShaderCompileErrors(GLuint shader, const std::string &type) {

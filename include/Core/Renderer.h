@@ -12,13 +12,14 @@
 
 #include "Camera.h"
 #include "Scene.h"
+#include "ShadowMap.h"
 
 class Renderer {
 public:
     Renderer(glm::ivec2 resolution);
     ~Renderer();
 
-    void run(Camera camera, Scene scene);
+    void run(Camera camera, Scene scene, ShadowMap* shadowMap);
 
     glm::ivec2 getResolution() {
         return resolution;

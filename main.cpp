@@ -5,9 +5,9 @@
 int main() {
     Renderer renderer(glm::ivec2(800, 600));
     Shader shader;
+    auto *shadowMap = new ShadowMap(800, 600);
     Scene scene;
-
-    Camera camera(glm::vec3(0.0f, 0.0f, 5.0f), renderer.getResolution());
+    Camera camera(glm::vec3(0.0f, 1.0f, 5.0f), renderer.getResolution());
 
     scene.children.push_back(
         new Mesh(
@@ -17,34 +17,29 @@ int main() {
                     glm::vec3(1.0f, 1.0f, 1.0f)
             ),
             new Material(
-                glm::vec3(0.1f, 0.8f, 0.7f),
+                glm::vec3(1.0f, 0.0f, 0.0f),
                 1.0f
             ),
-            shader.getShaderProgram()
+            shader.getShaderProgram(),
+            shader.getShaderProgramShadows()
         )
-     );
+    );
 
-    // rendering at 50fps
-    // 1681 unique objects + 1681 shader programs
-    /*
-    for (int x = 0; x < 41; x++) {
-        for (int y = 0; y < 41; y++) {
-            scene.children.push_back(
-                new Mesh(
-                    new CubeGeometry(
-                        glm::vec3(x - 20, y - 20, -50.0f),
-                        glm::vec3(0.0f, 0.0f, 0.0f),
-                        glm::vec3(0.5f, 0.5f, 0.5f)
-                    ),
-                    new Material(
-                        glm::vec3(1.0f, 1.0f, 1.0f),
-                        1.0f
-                    )
-                )
-            );
-        }
-    }
-     */
+    scene.children.push_back(
+        new Mesh(
+            new CubeGeometry(
+                    glm::vec3(0.0f, -0.5f, 0.0f),
+                    glm::vec3(0.0f, 0.0f, 0.0f),
+                    glm::vec3(5.0f, 0.1f, 5.0f)
+            ),
+            new Material(
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                1.0f
+            ),
+            shader.getShaderProgram(),
+            shader.getShaderProgramShadows()
+        )
+    );
 
-    renderer.run(camera, scene);
+    renderer.run(camera, scene, shadowMap);
 }
