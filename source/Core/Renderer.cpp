@@ -24,7 +24,7 @@ Renderer::Renderer(glm::ivec2 inputResolution) {
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
-    glfwWindowHint(GLFW_REFRESH_RATE, 90);
+    glfwWindowHint(GLFW_REFRESH_RATE, 120);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -33,7 +33,7 @@ Renderer::Renderer(glm::ivec2 inputResolution) {
     }
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_DEPTH_COMPONENT);
+    glEnable(GL_CULL_FACE);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(framebufferSizeCallback));
 }
 
@@ -51,7 +51,7 @@ void Renderer::run(Camera camera, Scene scene, ShadowMap* shadowMap) {
 
         camera.update(window, 8.3);
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         scene.update(camera.getView(), camera.getProjection(), shadowMap, 16.0f);
 

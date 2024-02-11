@@ -10,7 +10,7 @@
 
 class Mesh {
 public:
-    Mesh(Geometry *geometry, Material *material, GLuint shaderProgram, GLuint shaderProgramShadows);
+    Mesh(Geometry *geometry, Material *material, GLuint shaderProgram);
     ~Mesh();
 
     void render(glm::mat4 view, glm::mat4 projection, float deltaTime);
@@ -18,7 +18,6 @@ public:
     Geometry* geometry;
     Material* material;
     GLuint shaderProgram;
-    GLuint shaderProgramShadows;
 
 private:
     GLuint vao {};

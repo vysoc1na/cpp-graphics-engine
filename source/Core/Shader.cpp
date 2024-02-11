@@ -1,25 +1,17 @@
 #include <Core/Shader.h>
 
-Shader::Shader() {
-    vertexShader = loadShaderFromSource(vertexShaderSource, GL_VERTEX_SHADER);
-    fragmentShader = loadShaderFromSource(fragmentShaderSource, GL_FRAGMENT_SHADER);
+Shader::Shader(const char *vertexShaderSource, const char* fragmentShaderSource) {
+    GLuint vertexShader = loadShaderFromSource(vertexShaderSource, GL_VERTEX_SHADER);
+    GLuint fragmentShader = loadShaderFromSource(fragmentShaderSource, GL_FRAGMENT_SHADER);
 
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
-    fragmentShaderShadows = loadShaderFromSource(fragmentShaderShadowsSource, GL_FRAGMENT_SHADER);
-
-    shaderProgramShadows = glCreateProgram();
-    glAttachShader(shaderProgramShadows, vertexShader);
-    glAttachShader(shaderProgramShadows, fragmentShaderShadows);
-    glLinkProgram(shaderProgramShadows);
 }
 
 Shader::~Shader() {
     glDeleteProgram(shaderProgram);
-    glDeleteProgram(shaderProgramShadows);
 }
 
 void Shader::checkShaderCompileErrors(GLuint shader, const std::string &type) {

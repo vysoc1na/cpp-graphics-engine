@@ -16,7 +16,7 @@ Camera::Camera(glm::vec3 inputPosition, glm::ivec2 inputResolution) {
     resolution = inputResolution;
 
     projection = glm::perspective(
-        glm::radians(45.0f), static_cast<float>(resolution.x) / static_cast<float>(resolution.y), 1.0f, 64.0f
+        glm::radians(45.0f), static_cast<float>(resolution.x) / static_cast<float>(resolution.y), 0.1f, 64.0f
     );
     view = glm::lookAt(
         position, position + front, up

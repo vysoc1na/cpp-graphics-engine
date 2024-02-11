@@ -3,8 +3,8 @@
 
 #include <Core/Mesh.h>
 
-Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderProgram, GLuint inputShaderProgramShadows)
-    : geometry(inputGeometry), material(inputMaterial), shaderProgram(inputShaderProgram), shaderProgramShadows(inputShaderProgramShadows)
+Mesh::Mesh(Geometry *inputGeometry, Material *inputMaterial, GLuint inputShaderProgram)
+    : geometry(inputGeometry), material(inputMaterial), shaderProgram(inputShaderProgram)
 {
     vao = 0;
     vbo = 0;
