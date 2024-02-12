@@ -32,6 +32,7 @@ const char* fragmentShaderSource = R"(
 
     uniform vec3 color;
     uniform float alpha;
+    uniform float enableColors;
     uniform vec3 lightPosition;
 
     // uniform sampler2DShadow shadowMap;
@@ -41,14 +42,8 @@ const char* fragmentShaderSource = R"(
     float getShadow() {
         vec4 lightView_Position = lightSpaceMatrix * FragPos * 0.5 + 0.5;
 
-        float dotLightNormal = dot(normalize(lightPosition - FragPos.xyz), FragNormal);
-        // float bias = max(0.0005 * (1 - dotLightNormal), 0.0008);
-        float bias = 0.0005;
-
-        // lightView_Position.z -= 0.0005;
-        // lightView_Position.z -= bias;
-
-        // float shadow = textureProj(shadowMap, lightView_Position);
+        float dotLightNormal = max(dot(FragNormal, normalize(lightPosition - FragPos.xyz)), 0.1);
+        float bias = max(0.0005 * (1 - dotLightNormal), 0.0001);
 
         float shadow = texture(shadowMap, lightView_Position.xy).r;
 
@@ -56,7 +51,7 @@ const char* fragmentShaderSource = R"(
             lightView_Position.z = 1.0;
         }
 
-        return (shadow + bias) < lightView_Position.z ? 0.2 : 1.0;
+        return (shadow + bias) < lightView_Position.z ? 0.3 : 1.0;
     }
 
     vec3 getLighting() {
@@ -72,10 +67,7 @@ const char* fragmentShaderSource = R"(
         vec3 lighting = getLighting();
         float shadow = getShadow();
 
-        float linearDepth = (2.0 * 0.1) / (64 + 0.1 - gl_FragCoord.z * (64 - 0.1));
-
         FragColor = vec4(lighting * shadow, alpha);
-        // FragColor = vec4(vec3(linearDepth), alpha);
     }
 )";
 
@@ -98,7 +90,7 @@ int main() {
                     glm::vec3(1.0f, 1.0f, 1.0f)
             ),
             new Material(
-                glm::vec3(1.0f, 0.0f, 0.0f),
+                glm::vec3(0.0f, 1.0f, 0.0f),
                 1.0f
             ),
             shader->getShaderProgram()
@@ -126,7 +118,7 @@ int main() {
                     glm::vec3(1.0f, 1.0f, 4.0f)
             ),
             new Material(
-                glm::vec3(1.0f, 0.0f, 0.0f),
+                glm::vec3(0.0f, 0.0f, 1.0f),
                 1.0f
             ),
             shader->getShaderProgram()
@@ -150,3 +142,4 @@ int main() {
 
     renderer.run(camera, scene, shadowMap);
 }
+to play with a shadow map size, from small **512x512** to very large **4096x4096**, and nothing seemed to help this issue;

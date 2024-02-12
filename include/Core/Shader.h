@@ -16,8 +16,8 @@ public:
 private:
     GLuint shaderProgram {};
 
-    GLuint loadShaderFromSource(const char* shaderSource, GLenum shaderType);
-    void checkShaderCompileErrors(GLuint shader, const std::string &type);
+    static GLuint loadShaderFromSource(const char* shaderSource, GLenum shaderType);
+    static void checkShaderCompileErrors(GLuint shader, const std::string &type);
 };
 
 #endif // CORE_SHADER_H
