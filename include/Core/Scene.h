@@ -11,6 +11,9 @@ public:
 
     void update(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime);
 
+    void renderShadows(glm::vec3 lightPosition, ShadowMap* shadowMap, float deltaTime);
+    void renderScene(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime);
+
     std::vector<Mesh*> children;
 };
 

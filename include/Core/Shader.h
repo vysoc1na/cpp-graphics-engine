@@ -2,6 +2,8 @@
 #define CORE_SHADER_H
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <GLFW/glfw3.h>
 
 class Shader {
@@ -17,6 +19,7 @@ private:
     GLuint shaderProgram {};
 
     static GLuint loadShaderFromSource(const char* shaderSource, GLenum shaderType);
+    static const char* loadShaderFromFile(const char* filePath);
     static void checkShaderCompileErrors(GLuint shader, const std::string &type);
 };
 
