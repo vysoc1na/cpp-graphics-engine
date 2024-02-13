@@ -1,8 +1,11 @@
 #include <Core/Shader.h>
 
-Shader::Shader() {
-    vertexShader = loadShaderFromSource(vertexShaderSource, GL_VERTEX_SHADER);
-    fragmentShader = loadShaderFromSource(fragmentShaderSource, GL_FRAGMENT_SHADER);
+Shader::Shader(const char* vertexShaderPath, const char* fragmentShaderPath) {
+    const char* vertexShaderSource = loadShaderFromFile(vertexShaderPath);
+    const char* fragmentShaderSource = loadShaderFromFile(fragmentShaderPath);
+
+    GLuint vertexShader = loadShaderFromSource(vertexShaderSource, GL_VERTEX_SHADER);
+    GLuint fragmentShader = loadShaderFromSource(fragmentShaderSource, GL_FRAGMENT_SHADER);
 
     shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -26,13 +29,26 @@ void Shader::checkShaderCompileErrors(GLuint shader, const std::string &type) {
     }
 }
 
+const char* Shader::loadShaderFromFile(const char* filePath) {
+    std::ifstream shaderFile(filePath);
+    std::stringstream shaderStream;
+
+    if (!shaderFile.is_open()) {
+        std::cerr << "Error: Unable to open shader file - " << filePath << std::endl;
+        std::exit(-1);
+    }
+
+    shaderStream << shaderFile.rdbuf();
+    shaderFile.close();
+
+    return strdup(shaderStream.str().c_str());
+}
+
 GLuint Shader::loadShaderFromSource(const char* shaderSource, GLenum shaderType) {
-    // Create and compile shader
     GLuint shader = glCreateShader(shaderType);
     glShaderSource(shader, 1, &shaderSource, nullptr);
     glCompileShader(shader);
 
-    // Check for shader compilation errors
     checkShaderCompileErrors(shader, "Shader");
 
     return shader;

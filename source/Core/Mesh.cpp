@@ -27,9 +27,6 @@ Mesh::~Mesh() {
 }
 
 void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
-    glUseProgram(shaderProgram);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
     setupModelMatrix();
     // setupVertexData();
 
@@ -44,8 +41,6 @@ void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
     std::vector<GLint> indices = geometry->getIndices();
     glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indices.size() * sizeof(float)), GL_UNSIGNED_INT, nullptr);
     glBindVertexArray(0);
-
-    glUseProgram(0);
 }
 
 void Mesh::setupModelMatrix() {
@@ -72,13 +67,11 @@ void Mesh::setupVertexData() {
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizei>(vertices.size() * sizeof(float)), vertices.data(), GL_STATIC_DRAW);
-
     // normals buffer
     glGenBuffers(1, &nbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, nbo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(normals.size() * sizeof(float)), normals.data(), GL_STATIC_DRAW);
-
-    // indicies
+    // indices
     glGenBuffers(1, &ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, static_cast<GLsizei>(indices.size() * sizeof(int)), indices.data(), GL_STATIC_DRAW);
@@ -86,7 +79,6 @@ void Mesh::setupVertexData() {
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)nullptr);
     glEnableVertexAttribArray(0);
-
     // normals attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)nullptr);
     glEnableVertexAttribArray(1);

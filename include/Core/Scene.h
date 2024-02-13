@@ -2,13 +2,17 @@
 #define CORE_SCENE_H
 
 #include <Core/Mesh.h>
+#include <Core/ShadowMap.h>
 
 class Scene {
 public:
     Scene();
     ~Scene();
 
-    void update(glm::mat4 view, glm::mat4 projection, float deltaTime);
+    void update(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime);
+
+    void renderShadows(glm::vec3 lightPosition, ShadowMap* shadowMap, float deltaTime);
+    void renderScene(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime);
 
     std::vector<Mesh*> children;
 };
