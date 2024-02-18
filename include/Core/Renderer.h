@@ -28,6 +28,7 @@ public:
 private:
     GLFWwindow* window {};
     glm::ivec2 resolution {};
+    GLuint renderType;
 
     double lastTime {};
     int nbFrames {};

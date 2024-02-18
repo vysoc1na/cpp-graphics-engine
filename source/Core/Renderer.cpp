@@ -4,6 +4,7 @@
 
 Renderer::Renderer(glm::ivec2 inputResolution) {
     resolution = inputResolution;
+    renderType = GL_FILL;
 
     if (!glfwInit()) {
         std::cerr << "Failed to initialize GLFW\n";
@@ -33,7 +34,7 @@ Renderer::Renderer(glm::ivec2 inputResolution) {
     }
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
     glfwSetFramebufferSizeCallback(window, reinterpret_cast<GLFWframebuffersizefun>(framebufferSizeCallback));
 }
 
@@ -44,16 +45,26 @@ Renderer::~Renderer() {
 
 void Renderer::run(Camera camera, Scene scene, ShadowMap* shadowMap) {
     while (!glfwWindowShouldClose(window)) {
-        // render rest as normal
         if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, true);
         }
 
+        if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS) {
+            renderType = GL_FILL;
+        }
+        if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+            renderType = GL_LINE;
+        }
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) {
+            renderType = GL_POINT;
+        }
+
+        glPointSize(5.0f);
+        glPolygonMode(GL_FRONT_AND_BACK, renderType);
+
         camera.update(window, 8.3);
 
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        scene.update(camera.getView(), camera.getProjection(), shadowMap, 16.0f);
+        scene.update(camera.getView(), camera.getProjection(), camera.getPosition(), shadowMap, 16.0f);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

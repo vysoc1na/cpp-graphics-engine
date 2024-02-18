@@ -26,13 +26,15 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &ibo);
 }
 
-void Mesh::render(glm::mat4 view, glm::mat4 projection, float deltaTime) {
+void Mesh::render(glm::mat4 view, glm::mat4 projection, glm::vec3 viewPosition, float deltaTime) {
     setupModelMatrix();
     // setupVertexData();
 
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
     glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+    glUniform3fv(glGetUniformLocation(shaderProgram, "viewPosition"), 1, glm::value_ptr(viewPosition));
 
     glUniform3fv(glGetUniformLocation(shaderProgram, "color"), 1, glm::value_ptr(material->getColor()));
     glUniform1f(glGetUniformLocation(shaderProgram, "alpha"), material->getAlpha());

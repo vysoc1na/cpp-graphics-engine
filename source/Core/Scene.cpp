@@ -6,7 +6,7 @@ Scene::Scene() = default;
 
 Scene::~Scene() = default;
 
-void Scene::renderShadows(glm::vec3 lightPosition, ShadowMap* shadowMap, float deltaTime) {
+void Scene::renderShadows(glm::vec3 lightPosition, glm::vec3 viewPosition, ShadowMap* shadowMap, float deltaTime) {
     glm::vec3 sceneCenter(0.0f, 0.0f, 0.0f);
     glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 1.0f, 64.0f);
     glm::mat4 lightViewMatrix = glm::lookAt(lightPosition, sceneCenter, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -20,31 +20,31 @@ void Scene::renderShadows(glm::vec3 lightPosition, ShadowMap* shadowMap, float d
     shadowMap->BindFramebuffer();
 
     for (Mesh* mesh : children) {
-        mesh->render(lightViewMatrix, lightProjection, deltaTime);
+        mesh->render(lightViewMatrix, lightProjection, viewPosition, deltaTime);
     }
     glUniform1i(glGetUniformLocation(children[0]->shaderProgram, "shadowMap"), 0);
     for (Mesh* mesh : children) {
-        mesh->render(lightViewMatrix, lightProjection, deltaTime);
+        mesh->render(lightViewMatrix, lightProjection, viewPosition, deltaTime);
     }
 
     ShadowMap::UnbindFramebuffer();
 }
 
-void Scene::renderScene(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime) {
+void Scene::renderScene(glm::mat4 view, glm::mat4 projection, glm::vec3 viewPosition, ShadowMap* shadowMap, float deltaTime) {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, shadowMap->GetDepthMap());
 
     glUniform1i(glGetUniformLocation(children[0]->shaderProgram, "shadowMap"), 1);
     for (Mesh* mesh : children) {
-        mesh->render(view, projection, deltaTime);
+        mesh->render(view, projection, viewPosition, deltaTime);
     }
 }
 
-void Scene::update(glm::mat4 view, glm::mat4 projection, ShadowMap* shadowMap, float deltaTime) {
-    double x = cos(glfwGetTime() / 5) * 10.0f;
-    double z = sin(glfwGetTime() / 5) * 10.0f;
+void Scene::update(glm::mat4 view, glm::mat4 projection, glm::vec3 viewPosition, ShadowMap* shadowMap, float deltaTime) {
+    double x = cos(glfwGetTime() / 2) * 10.0f;
+    double z = sin(glfwGetTime() / 2) * 10.0f;
     glm::vec3 lightPosition(x, 10.0f, z);
 
-    Scene::renderShadows(lightPosition, shadowMap, deltaTime);
-    Scene::renderScene(view, projection, shadowMap, deltaTime);
+    Scene::renderShadows(lightPosition, viewPosition, shadowMap, deltaTime);
+    Scene::renderScene(view, projection, viewPosition, shadowMap, deltaTime);
 }

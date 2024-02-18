@@ -13,7 +13,7 @@ public:
     Mesh(Geometry *geometry, Material *material, GLuint shaderProgram);
     ~Mesh();
 
-    void render(glm::mat4 view, glm::mat4 projection, float deltaTime);
+    void render(glm::mat4 view, glm::mat4 projection, glm::vec3 viewPosition, float deltaTime);
 
     Geometry* geometry;
     Material* material;

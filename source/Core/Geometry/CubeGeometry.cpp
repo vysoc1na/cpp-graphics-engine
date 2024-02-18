@@ -1,4 +1,4 @@
-#include "include/Core/Geometry/CubeGeometry.h"
+#include <Core/Geometry/CubeGeometry.h>
 
 CubeGeometry::CubeGeometry(glm::vec3 inputPosition, glm::vec3 inputRotation, glm::vec3 inputScale)
         : Geometry(inputPosition, inputRotation, inputScale) {}
